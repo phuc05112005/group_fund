@@ -1,0 +1,30 @@
+server:
+  port: 8088 # Cổng chạy cho Spring Boot Backend
+
+spring:
+  application:
+    name: group-fund-backend
+
+  # Cấu hình PostgreSQL (mật khẩu 123456)
+  datasource:
+    url: jdbc:postgresql://localhost:5432/group_fund_db
+    username: postgres
+    password: 123456
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # Cấu hình Keycloak OAuth2 JWT Server
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/group-fund-realm
+          jwk-set-uri: http://localhost:8080/realms/group-fund-realm/protocol/openid-connect/certs

@@ -1,0 +1,38 @@
+services:
+  # 1. Database PostgreSQL cho dữ liệu ứng dụng
+  postgres:
+    image: postgres:16-alpine
+    container_name: group_fund_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: group_fund_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - group_fund_net
+
+  # 2. Keycloak IAM Server (Đã đổi port ngoài thành 8081)
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.0
+    container_name: group_fund_keycloak
+    restart: always
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command: start-dev --http-port 8080
+    ports:
+      - "8080:8080"
+    networks:
+      - group_fund_net
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  group_fund_net:
+    driver: bridge
