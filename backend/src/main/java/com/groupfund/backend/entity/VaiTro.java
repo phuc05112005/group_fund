@@ -4,18 +4,19 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "VAI_TRO")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Table(name = "\"VaiTro\"")
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 public class VaiTro {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ma_vai_tro")
+    @Column(name = "\"maVaiTro\"")
     private Long maVaiTro;
 
-    @Column(name = "ten_vai_tro", nullable = false, unique = true, length = 50)
+    @Column(name = "\"tenVaiTro\"", nullable = false, unique = true, length = 50)
     private String tenVaiTro;
 
-    @Column(name = "mo_ta", columnDefinition = "TEXT")
+    @Column(name = "\"moTa\"", columnDefinition = "TEXT")
     private String moTa;
 }

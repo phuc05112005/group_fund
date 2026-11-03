@@ -1,62 +1,51 @@
 package com.groupfund.backend.entity;
 
-import com.groupfund.backend.enums.TrangThaiKhoanNop;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "KHOAN_NOP")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Table(name = "KhoanNop")
+@Data
 public class KhoanNop {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ma_khoan_nop")
+    @Column(name = "maKhoanNop")
     private Long maKhoanNop;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ma_nhom", nullable = false)
-    private NhomQuy nhomQuy;
+    @Column(name = "noiDung", columnDefinition = "TEXT")
+    private String noiDung;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ma_nguoi_khai_bao", nullable = false)
-    private ThanhVienNhom nguoiKhaiBao;
+    @JoinColumn(name = "nguoiNopId", nullable = false)
+    @JsonIgnoreProperties({"nhomQuy", "hibernateLazyInitializer", "handler"})
+    private ThanhVienNhom nguoiNop;
 
+    // SỬA: nullable = true để cho phép nộp tiền không qua thủ quỹ
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ma_thu_quy_nhan", nullable = false)
+    @JoinColumn(name = "thuQuyNhanId", nullable = true)
+    @JsonIgnoreProperties({"nhomQuy", "hibernateLazyInitializer", "handler"})
     private ThanhVienNhom thuQuyNhan;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ma_nghia_vu")
-    private NghiaVuDongGop nghiaVuDongGop;
+    @JoinColumn(name = "chiTietDeXuatId")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private ChiTietDeXuat chiTietDeXuat;
 
-    @Column(name = "so_tien", nullable = false, precision = 15, scale = 2)
+    @Column(name = "soTien", nullable = false, precision = 15, scale = 2)
     private BigDecimal soTien;
 
-    @Column(name = "so_tien_ap_dung_nghia_vu", precision = 15, scale = 2)
-    private BigDecimal soTienApDungNghiaVu = BigDecimal.ZERO;
+    @Column(name = "phuongThuc", length = 50)
+    private String phuongThuc = "CHUYEN_KHOAN";
 
-    @Column(name = "phuong_thuc", nullable = false, length = 50)
-    private String phuongThuc = "BANK_TRANSFER";
+    @Column(name = "minhChung", columnDefinition = "TEXT")
+    private String minhChung;
 
-    @Column(name = "duong_dan_minh_chung", columnDefinition = "TEXT")
-    private String duongDanMinhChung;
+    @Column(name = "trangThai", length = 30)
+    private String trangThai = "CHO_XAC_NHAN";
 
-    @Column(name = "ghi_chu", columnDefinition = "TEXT")
-    private String ghiChu;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "trang_thai", nullable = false)
-    private TrangThaiKhoanNop trangThai = TrangThaiKhoanNop.CHO_XAC_NHAN;
-
-    @Column(name = "ngay_khai_bao", nullable = false)
-    private OffsetDateTime ngayKhaiBao = OffsetDateTime.now();
-
-    @Column(name = "ngay_xac_nhan")
-    private OffsetDateTime ngayXacNhan;
-
-    @Column(name = "ly_do_tu_choi", columnDefinition = "TEXT")
-    private String lyDoTuChoi;
+    @Column(name = "ngayKhaiBao", insertable = false, updatable = false)
+    private OffsetDateTime ngayKhaiBao;
 }

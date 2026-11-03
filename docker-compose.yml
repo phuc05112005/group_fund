@@ -1,5 +1,5 @@
 services:
-  # 1. Database PostgreSQL cho dữ liệu ứng dụng
+  # 1. Database PostgreSQL cho dữ liệu ứng dụng & Keycloak
   postgres:
     image: postgres:16-alpine
     container_name: group_fund_postgres
@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_DB: group_fund_db
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
+      POSTGRES_PASSWORD: "123456"
     ports:
       - "5432:5432"
     volumes:
@@ -15,7 +15,7 @@ services:
     networks:
       - group_fund_net
 
-  # 2. Keycloak IAM Server (Đã đổi port ngoài thành 8081)
+  # 2. Keycloak IAM Server (Chạy cổng 8080)
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.0
     container_name: group_fund_keycloak
@@ -23,9 +23,18 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-    command: start-dev --http-port 8080
+      # SỬA LẠI ĐÚNG DATABASE KEYCLOAK_DB Ở ĐÂY:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_db
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: "123456"
+      KC_HOSTNAME_URL: http://localhost:8080
+      KC_HOSTNAME_STRICT: "false"
+    command: start-dev --http-port 8080 --spi-theme-static-max-age=-1 --spi-theme-cache-themes=false
     ports:
       - "8080:8080"
+    depends_on:
+      - postgres
     networks:
       - group_fund_net
 

@@ -1,11 +1,10 @@
 server:
-  port: 8088 # Cổng chạy cho Spring Boot Backend
+  port: 8088
 
 spring:
   application:
     name: group-fund-backend
 
-  # Cấu hình PostgreSQL (mật khẩu 123456)
   datasource:
     url: jdbc:postgresql://localhost:5432/group_fund_db
     username: postgres
@@ -14,17 +13,27 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        globally_quoted_identifiers: true
 
-  # Cấu hình Keycloak OAuth2 JWT Server
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8080/realms/group-fund-realm
           jwk-set-uri: http://localhost:8080/realms/group-fund-realm/protocol/openid-connect/certs
+
+
+vnpay:
+  tmn-code: ${VNPAY_TMN_CODE:4TC2BEHO}
+  hash-secret: ${VNPAY_HASH_SECRET:FPQCIHRQEQUOQQLLEBMESJIMIAWNLCLX}
+  pay-url: ${VNPAY_PAY_URL:https://sandbox.vnpayment.vn/paymentv2/vpcpay.html}
+  return-url: ${VNPAY_RETURN_URL:http://localhost:5173/payment-result}
+  api-url: ${VNPAY_API_URL:https://sandbox.vnpayment.vn/merchant_webapi/api/transaction}

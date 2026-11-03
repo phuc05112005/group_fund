@@ -1,35 +1,47 @@
 package com.groupfund.backend.entity;
 
-import com.groupfund.backend.enums.TrangThaiThanhVien;
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.OffsetDateTime;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "THANH_VIEN_NHOM")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Table(name = "\"ThanhVienNhom\"")
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 public class ThanhVienNhom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ma_thanh_vien_nhom")
+    @Column(name = "\"maThanhVienNhom\"")
     private Long maThanhVienNhom;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ma_nhom", nullable = false)
-    private NhomQuy nhomQuy;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ma_nguoi_dung", nullable = false)
+    // Sửa lại tên cột khóa ngoại trỏ tới NguoiDung thành nguoiDungId
+    @ManyToOne
+    @JoinColumn(name = "\"nguoiDungId\"", nullable = false)
     private NguoiDung nguoiDung;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "trang_thai_thanh_vien", nullable = false)
-    private TrangThaiThanhVien trangThaiThanhVien = TrangThaiThanhVien.HOAT_DONG;
+    // Sửa lại tên cột khóa ngoại trỏ tới NhomQuy thành nhomId
+    @ManyToOne
+    @JoinColumn(name = "\"nhomId\"", nullable = false)
+    private NhomQuy nhomQuy;
 
-    @Column(name = "ngay_tham_gia", nullable = false)
-    private OffsetDateTime ngayThamGia = OffsetDateTime.now();
+    @Column(name = "\"soDuCaNhan\"")
+    private BigDecimal soDuCaNhan = BigDecimal.ZERO;
 
-    @Column(name = "ngay_roi_nhom")
-    private OffsetDateTime ngayRoiNhom;
+    @Column(name = "\"soTienDangGiu\"")
+    private BigDecimal soTienDangGiu = BigDecimal.ZERO;
+
+    @Column(name = "\"trangThaiThanhVien\"")
+    private String trangThaiThanhVien = "HOAT_DONG";
+
+    // Danh sách các vai trò của thành viên trong nhóm
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "\"ThanhVienNhom_VaiTro\"",
+            joinColumns = @JoinColumn(name = "\"maThanhVienNhom\"")
+    )
+    @Column(name = "\"tenVaiTro\"")
+    private List<String> danhSachVaiTro = new ArrayList<>();
 }

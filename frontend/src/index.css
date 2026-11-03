@@ -1,3 +1,264 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes gradient-pan {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ------------------------------------------------------------------ */
+/*  BẢNG MÀU — dạng "R G B" để Tailwind ghép được độ trong suốt (/80)  */
+/*  Tối: nâu mực ấm, vàng đồng + lục ngọc (giữ nhận diện cũ).          */
+/*  Sáng: giấy sổ kẻ xanh, mực lục thẫm, vàng thau — không phải kem.   */
+/* ------------------------------------------------------------------ */
+@layer base {
+  :root,
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+    --page: 20 16 11;
+    --ink: 248 243 233;
+
+    --slate-50: 248 243 233;  --slate-100: 241 233 216; --slate-200: 227 216 194;
+    --slate-300: 205 191 165; --slate-400: 168 154 130; --slate-500: 149 137 113;
+    --slate-600: 98 88 70;    --slate-700: 67 59 47;    --slate-800: 45 39 30;
+    --slate-850: 35 30 23;    --slate-900: 28 23 16;    --slate-950: 20 16 11;
+
+    --emerald-300: 110 231 183; --emerald-400: 52 211 153;  --emerald-500: 16 185 129; --emerald-600: 5 150 105;
+    --amber-300: 240 205 128;   --amber-400: 224 176 79;    --amber-500: 207 156 63;   --amber-600: 176 125 38;
+    --rose-300: 253 164 175;    --rose-400: 251 113 133;    --rose-500: 244 63 94;     --rose-600: 225 29 72;
+    --blue-300: 147 197 253;    --blue-400: 96 165 250;     --blue-500: 59 130 246;    --blue-600: 37 99 235;
+    --purple-300: 216 180 254;  --purple-400: 192 132 252;  --purple-500: 168 85 247;  --purple-600: 147 51 234;
+
+    --glow-gold: 207 156 63; --glow-green: 58 150 105; --glow-blue: 100 144 194;
+    --glow-1: 0.10; --glow-2: 0.10; --glow-3: 0.07;
+
+    --aur-1: 248 243 233; --aur-2: 234 207 143; --aur-3: 116 187 178;
+    --thumb: 56 46 34; --thumb-hover: 80 66 48;
+    --sel: 207 156 63; --sel-a: 0.28;
+    --grain: 0.05; --grain-blend: overlay;
+  }
+
+  :root[data-theme='light'] {
+    color-scheme: light;
+    --page: 227 235 222;
+    --ink: 20 32 26;
+
+    --slate-50: 20 32 26;     --slate-100: 22 35 28;    --slate-200: 38 54 45;
+    --slate-300: 60 78 67;    --slate-400: 84 102 91;   --slate-500: 96 112 101;
+    --slate-600: 138 152 142; --slate-700: 196 208 196; --slate-800: 216 226 214;
+    --slate-850: 232 238 228; --slate-900: 251 252 247; --slate-950: 238 243 233;
+
+    /* Chữ màu dùng cấp 300-400 → đậm; nút đặc dùng cấp 500 → chữ trắng vẫn đạt tương phản */
+    --emerald-300: 6 78 59;    --emerald-400: 4 120 87;   --emerald-500: 4 128 92;   --emerald-600: 4 120 87;
+    --amber-300: 133 77 14;    --amber-400: 161 98 7;     --amber-500: 168 98 6;     --amber-600: 133 77 14;
+    --rose-300: 159 18 57;     --rose-400: 190 18 60;     --rose-500: 225 29 72;     --rose-600: 190 18 60;
+    --blue-300: 30 64 175;     --blue-400: 29 78 216;     --blue-500: 37 99 235;     --blue-600: 29 78 216;
+    --purple-300: 107 33 168;  --purple-400: 126 34 206;  --purple-500: 147 51 234;  --purple-600: 126 34 206;
+
+    --glow-gold: 184 134 42; --glow-green: 5 150 105; --glow-blue: 70 120 170;
+    --glow-1: 0.20; --glow-2: 0.16; --glow-3: 0.10;
+
+    --aur-1: 20 32 26; --aur-2: 150 98 8; --aur-3: 6 120 96;
+    --thumb: 170 186 172; --thumb-hover: 130 152 135;
+    --sel: 5 150 105; --sel-a: 0.22;
+    --grain: 0.045; --grain-blend: multiply;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Be Vietnam Pro', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background-color: rgb(var(--page));
+    color: rgb(var(--slate-200));
+    background-image:
+      radial-gradient(1100px 520px at 12% -8%, rgb(var(--glow-gold) / var(--glow-1)), transparent 55%),
+      radial-gradient(900px 520px at 100% 0%, rgb(var(--glow-green) / var(--glow-2)), transparent 55%),
+      radial-gradient(720px 720px at 50% 118%, rgb(var(--glow-blue) / var(--glow-3)), transparent 55%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+
+  /* Hạt giấy mờ: nền có chất liệu thay vì phẳng */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: var(--grain);
+    mix-blend-mode: var(--grain-blend);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Nếu Layout bọc ngoài bằng bg-slate-950 đặc thì nền động sẽ bị che → trả về trong suốt */
+  #root > .bg-slate-950 { background-color: transparent; }
+
+  h1, h2 {
+    font-family: 'Fraunces', 'Be Vietnam Pro', Georgia, Cambria, serif;
+    letter-spacing: -0.015em;
+    font-optical-sizing: auto;
+    font-variation-settings: 'opsz' 30;
+  }
+
+  ::selection {
+    background-color: rgb(var(--sel) / var(--sel-a));
+    color: rgb(var(--ink));
+  }
+
+  ::placeholder { color: rgb(var(--slate-600)); opacity: 1; }
+
+  /* Ô chọn / gợi ý tự điền không bị trắng–đen lệch theme */
+  option { background-color: rgb(var(--slate-900)); color: rgb(var(--ink)); }
+  input:-webkit-autofill,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: rgb(var(--ink));
+    caret-color: rgb(var(--ink));
+    box-shadow: 0 0 0 100px rgb(var(--slate-950)) inset;
+    transition: background-color 9999s ease-out;
+  }
+  input, select, textarea { caret-color: rgb(var(--emerald-500)); }
+  input:focus, select:focus, textarea:focus {
+    box-shadow: 0 0 0 3px rgb(var(--emerald-500) / 0.14);
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--thumb)) transparent;
+  }
+  *::-webkit-scrollbar { width: 10px; height: 10px; }
+  *::-webkit-scrollbar-track { background: transparent; }
+  *::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--thumb));
+    border-radius: 9999px;
+    border: 2px solid rgb(var(--page));
+  }
+  *::-webkit-scrollbar-thumb:hover { background-color: rgb(var(--thumb-hover)); }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--amber-500) / 0.75);
+    outline-offset: 2px;
+  }
+
+  button, a, [role='button'] { -webkit-tap-highlight-color: transparent; }
+  button:not(:disabled):active { transform: translateY(1px) scale(0.975); }
+
+  /* Đổi theme: vòng loang tròn (View Transitions) */
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+  ::view-transition-old(root) { z-index: 1; }
+  ::view-transition-new(root) { z-index: 2; }
+
+  /* Dự phòng cho trình duyệt chưa có View Transitions */
+  html.theme-xfade,
+  html.theme-xfade *,
+  html.theme-xfade *::before,
+  html.theme-xfade *::after {
+    transition: background-color 0.45s ease, color 0.45s ease, border-color 0.45s ease,
+      fill 0.45s ease, stroke 0.45s ease, box-shadow 0.45s ease !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Chế độ sáng: Xử lý màu sắc & tương phản chuẩn xác cho mọi Card    */
+/* ------------------------------------------------------------------ */
+@layer components {
+  /* Tự động chuyển các chữ text-white trên các thẻ card sang màu mực thẫm khi ở Light Mode */
+  :root[data-theme='light'] :is(h1, h2, h3, h4, h5, h6, span, p, div, label).text-white {
+    color: rgb(var(--ink)) !important;
+  }
+
+  /* Nút bấm đặc có màu nền (Emerald, Amber, Rose, Blue, Purple): Giữ chữ màu trắng */
+  :root[data-theme='light'] :is(
+    .bg-emerald-500, .bg-emerald-600,
+    .bg-amber-500, .bg-amber-600,
+    .bg-rose-500, .bg-rose-600,
+    .bg-blue-500, .bg-blue-600,
+    .bg-purple-500, .bg-purple-600
+  ) :is(.text-white, .text-slate-950, span, p, svg) {
+    color: #ffffff !important;
+  }
+
+  /* Đồng bộ toàn bộ các loại thẻ Card có opacity (.bg-slate-950/60, .bg-slate-900/80...) sang màu nền giấy ngọc sáng */
+  :root[data-theme='light'] :is(
+    .bg-slate-950, .bg-slate-950\/80, .bg-slate-950\/60, .bg-slate-950\/40,
+    .bg-slate-900, .bg-slate-900\/80, .bg-slate-900\/60, .bg-slate-900\/40, .bg-slate-900\/20,
+    .bg-slate-850, .bg-slate-850\/80, .bg-slate-850\/60, .bg-slate-850\/40,
+    .bg-slate-800\/50, .bg-slate-800\/40
+  ) {
+    background-color: rgb(var(--slate-900)) !important;
+    border-color: rgb(var(--slate-700)) !important;
+    box-shadow: 0 4px 18px -2px rgba(20, 32, 26, 0.05);
+  }
+
+  /* Lớp mờ phía sau modal: tối vừa đủ để thẻ trắng nổi lên */
+  :root[data-theme='light'] .fixed.inset-0[class*='bg-slate-950/'] {
+    background-color: rgb(20 32 26 / 0.45);
+  }
+
+  /* Dải nhấn màu loang nhẹ cho nền đầu trang */
+  .aurora {
+    background:
+      radial-gradient(480px 200px at 18% 0%, rgb(var(--glow-gold) / 0.16), transparent 70%),
+      radial-gradient(420px 220px at 86% 12%, rgb(var(--glow-green) / 0.16), transparent 70%);
+  }
+
+  /* Chữ tiêu điểm có ánh loang nhẹ */
+  .text-aurora {
+    background-image: linear-gradient(100deg, rgb(var(--aur-1)) 0%, rgb(var(--aur-2)) 38%, rgb(var(--aur-3)) 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .text-aurora-live {
+    background-image: linear-gradient(100deg, rgb(var(--aur-1)), rgb(var(--aur-2)), rgb(var(--aur-3)), rgb(var(--aur-2)), rgb(var(--aur-1)));
+    background-size: 220% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gradient-pan 9s ease infinite;
+  }
+
+  /* Thanh tiến trình có vệt sáng trượt */
+  .bar-shimmer { position: relative; overflow: hidden; }
+  .bar-shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.35) 50%, transparent 80%);
+    background-size: 200% 100%;
+    animation: shimmer 2.6s linear infinite;
+  }
+
+  /* Núm công tắc sáng/tối: một đồng xu vàng thau */
+  .coin-knob {
+    color: #4a2f08;
+    background: radial-gradient(circle at 30% 28%, #fff3c4 0%, #e0b04f 46%, #a8741f 100%);
+    box-shadow:
+      inset 0 0 0 2px rgb(255 255 255 / 0.28),
+      inset 0 0 0 3.5px rgb(120 80 10 / 0.35),
+      0 3px 8px rgb(0 0 0 / 0.28);
+  }
+}

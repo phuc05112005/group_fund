@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface KhoanChiRepository extends JpaRepository<KhoanChi, Long> {
-    List<KhoanChi> findByNhomQuy_MaNhom(Long maNhom);
-    long countByNhomQuy_MaNhom(Long maNhom);
+
+    // Tìm danh sách khoản chi thông qua Thủ quỹ thực hiện thuộc Nhóm Quỹ
+    List<KhoanChi> findByThuQuyThucHien_NhomQuy_MaNhom(Long maNhom);
 }

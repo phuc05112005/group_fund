@@ -8,8 +8,20 @@ import java.util.Optional;
 
 @Repository
 public interface NguoiDungRepository extends JpaRepository<NguoiDung, Long> {
+
+    // Tìm người dùng theo keycloakUserId (đọc từ claim 'sub' của JWT Token)
     Optional<NguoiDung> findByKeycloakUserId(String keycloakUserId);
-    Optional<NguoiDung> findByEmail(String email);
-    boolean existsByEmail(String email);
+
+    // Kiểm tra trùng lặp số điện thoại khi đăng ký/cập nhật
     boolean existsBySoDienThoai(String soDienThoai);
+
+    // Kiểm tra trùng lặp email khi đăng ký/cập nhật
+    boolean existsByEmail(String email);
+
+    // Tìm người dùng theo số điện thoại
+    Optional<NguoiDung> findBySoDienThoai(String soDienThoai);
+
+    // Tìm người dùng theo email
+    Optional<NguoiDung> findByEmail(String email);
+
 }

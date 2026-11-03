@@ -1,52 +1,41 @@
 package com.groupfund.backend.entity;
 
-import com.groupfund.backend.enums.TrangThaiChuyenGiao;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "CHUYEN_GIAO_QUY")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Table(name = "\"ChuyenGiaoQuy\"")
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 public class ChuyenGiaoQuy {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ma_chuyen_giao")
+    @Column(name = "\"maChuyenGiao\"")
     private Long maChuyenGiao;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ma_nhom", nullable = false)
-    private NhomQuy nhomQuy;
+    @JoinColumn(name = "\"thuQuyGuiId\"", nullable = false)
+    private ThanhVienNhom thuQuyGui;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ma_nguoi_chuyen", nullable = false)
-    private ThanhVienNhom nguoiChuyen;
+    @JoinColumn(name = "\"thuQuyNhanId\"", nullable = false)
+    private ThanhVienNhom thuQuyNhan;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ma_nguoi_nhan", nullable = false)
-    private ThanhVienNhom nguoiNhan;
-
-    @Column(name = "so_tien", nullable = false, precision = 15, scale = 2)
+    @Column(name = "\"soTien\"", nullable = false, precision = 15, scale = 2)
     private BigDecimal soTien;
 
-    @Column(name = "ghi_chu", columnDefinition = "TEXT")
-    private String ghiChu;
+    @Column(name = "\"phuongThuc\"", length = 50)
+    private String phuongThuc = "CHUYEN_KHOAN";
 
-    @Column(name = "duong_dan_minh_chung", columnDefinition = "TEXT")
-    private String duongDanMinhChung;
+    @Column(name = "minh_chung", columnDefinition = "text")
+    private String minhChung;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "trang_thai", nullable = false)
-    private TrangThaiChuyenGiao trangThai = TrangThaiChuyenGiao.CHO_XAC_NHAN;
+    @Column(name = "\"trangThai\"", length = 30)
+    private String trangThai = "CHO_XAC_NHAN";
 
-    @Column(name = "ngay_tao", nullable = false)
-    private OffsetDateTime ngayTao = OffsetDateTime.now();
-
-    @Column(name = "ngay_xac_nhan")
-    private OffsetDateTime ngayXacNhan;
-
-    @Column(name = "ly_do_tu_choi", columnDefinition = "TEXT")
-    private String lyDoTuChoi;
+    @Column(name = "\"ngayTao\"", insertable = false, updatable = false)
+    private OffsetDateTime ngayTao;
 }

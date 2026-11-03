@@ -12,8 +12,8 @@ import java.util.Optional;
 @Repository
 public interface NhomQuyRepository extends JpaRepository<NhomQuy, Long> {
 
-    Optional<NhomQuy> findByMaThamGia(String maThamGia);
+    Optional<NhomQuy> findByMaMoi(String maMoi);
 
-    @Query("SELECT tv.nhomQuy FROM ThanhVienNhom tv WHERE tv.nguoiDung.maNguoiDung = :maNguoiDung AND (tv.trangThaiThanhVien IS NULL OR tv.trangThaiThanhVien = com.groupfund.backend.enums.TrangThaiThanhVien.HOAT_DONG)")
-    List<NhomQuy> findNhomByNguoiDungId(@Param("maNguoiDung") Long maNguoiDung);
+    @Query("SELECT DISTINCT n FROM NhomQuy n JOIN ThanhVienNhom tv ON n.maNhom = tv.nhomQuy.maNhom WHERE tv.nguoiDung.maNguoiDung = :maNguoiDung")
+    List<NhomQuy> findByThanhVienNhom_NguoiDung_MaNguoiDung(@Param("maNguoiDung") Long maNguoiDung);
 }
