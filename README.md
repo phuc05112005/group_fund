@@ -338,7 +338,7 @@ Xem toàn bộ tại thư mục [`docs/assets/diagrams`](docs/assets/diagrams/).
 
 **Sơ đồ triển khai**
 
-![Triển khai](docs/assets/diagrams/25-so-do-trien-khai.png)
+![Triển khai](docs/assets/diagrams/25-so-do-trien-khai.jpg)
 
 ### Một số giao diện sản phẩm
 
@@ -387,7 +387,7 @@ Báo cáo đồ án ghi nhận 27 yêu cầu chức năng: 22 yêu cầu hoàn t
 - Một số dữ liệu dự phòng như phiếu biểu quyết, thông báo hoặc trạng thái đọc có thể lưu trong `localStorage`.
 - Một số API có trong backend chưa được frontend tích hợp thành luồng giao diện hoàn chỉnh.
 - Rút quỹ hiện được xử lý ngay trong backend, chưa có quy trình đối soát trạng thái nhiều bước như thiết kế.
-- Chưa có quy trình xuất sao kê Excel/PDF/CSV và chưa có hệ thống lưu trữ file riêng.
+- Chưa có quy trình xuất sao kê Excel/PDF/CSV và chưa có hệ thống lưu trữ file riêng.cau hinh
 - Chưa có cấu hình production, HTTPS, CI/CD và kiểm thử diện rộng.
 
 Các nội dung trên được nêu để người xem repository phân biệt rõ **phần đã triển khai** và **phần còn là hướng hoàn thiện**, tránh hiểu nhầm sản phẩm thử nghiệm là hệ thống tài chính production.
