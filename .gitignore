@@ -1,0 +1,41 @@
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Backend secrets and local configuration
+backend/.env
+backend/.env.*
+!backend/.env.example
+backend/src/main/resources/application-local.yml
+
+# Logs
+*.log
+logs/
+
+# Java / Maven
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local database / backup
+*.dump
+*.backup
+*.bak

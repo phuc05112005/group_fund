@@ -3,40 +3,65 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: group_fund_postgres
-    restart: always
+    restart: unless-stopped
+
     environment:
-      POSTGRES_DB: group_fund_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: "123456"
+      POSTGRES_DB: ${POSTGRES_DB:-group_fund_db}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+
     ports:
       - "5432:5432"
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+
     networks:
       - group_fund_net
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   # 2. Keycloak IAM Server (Chạy cổng 8080)
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.0
     container_name: group_fund_keycloak
-    restart: always
+    restart: unless-stopped
+
     environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-      # SỬA LẠI ĐÚNG DATABASE KEYCLOAK_DB Ở ĐÂY:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?KEYCLOAK_ADMIN_PASSWORD is required}
+
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_db
-      KC_DB_USERNAME: postgres
-      KC_DB_PASSWORD: "123456"
+      KC_DB_USERNAME: ${POSTGRES_USER:-postgres}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+
       KC_HOSTNAME_URL: http://localhost:8080
       KC_HOSTNAME_STRICT: "false"
-    command: start-dev --http-port 8080 --spi-theme-static-max-age=-1 --spi-theme-cache-themes=false
+
+    command:
+      - start-dev
+      - --import-realm
+
+    volumes:
+      - ./keycloak/realm:/opt/keycloak/data/import:ro
+
     ports:
       - "8080:8080"
+
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+
     networks:
       - group_fund_net
+
+      
 
 volumes:
   postgres_data:
